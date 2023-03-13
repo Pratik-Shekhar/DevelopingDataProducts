@@ -1,0 +1,62 @@
+---
+title: "Shiny App Reproducible Pitch Presentation"
+author: "You!"
+date: '`r Sys.Date()`'
+output: ioslides_presentation
+---
+
+
+## How to use the application
+
+This is a deliverable for the course Developing Data Products as part of the Coursera Data Science Specialization.
+
+The application is running on (https://pratikshekhar.shinyapps.io/shinyApplicationRepPitch/)
+
+ui.R, and Server.R Code in my github repository (https://github.com/Pratik-Shekhar/DevelopingDataProducts)
+
+
+## mtcars Dataset
+
+> The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973-74 models).
+
+> Source: Henderson and Velleman (1981), Building multiple regression models interactively. Biometrics, 37, 391-411.
+
+```{r}
+library(datasets)
+head(mtcars, 3)
+```
+
+## mtcars Dataset - Format
+**A data frame with 32 observations on 11 variables.**
+
+- mpg - Miles/(US) gallon
+- cyl - Number of cylinders
+- disp - Displacement (cu.in.)
+- hp - Gross horsepower
+- drat - Rear axle ratio
+- wt - Weight (lb/1000)
+- qsec - 1/4 mile time
+- vs - V/S
+- am - Transmission (0 = automatic, 1 = manual)
+- gear - Number of forward gears
+- carb - Number of carburetors
+
+
+## Analysis - Main Code
+
+```r
+  formulaTextPoint <- reactive({
+    paste("mpg ~", "as.integer(", input$variable, ")")  })
+  
+  fit <- reactive({
+    lm(as.formula(formulaTextPoint()), data=mpgData)  })
+  ...
+  output$fit <- renderPrint({
+    summary(fit()) })
+  
+  output$mpgPlot <- renderPlot({
+    with(mpgData, {
+      plot(as.formula(formulaTextPoint()))
+      abline(fit(), col=2)
+    })  })
+```
